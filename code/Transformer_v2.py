@@ -112,8 +112,6 @@ for filename_single_full in PatientRespiratoryList:
     train_lenth = len(Amplitude_repiratory_signal_temp) * TrainingDB_Ratio
 
     train_Amplitude_repiratory_signal_temp =Amplitude_repiratory_signal_temp[:int(train_lenth)]
-    train_Amplitude_repiratory_signal_temp = sp.signal.savgol_filter(train_Amplitude_repiratory_signal_temp, 25, 2)
-
     test_Amplitude_repiratory_signal_temp = Amplitude_repiratory_signal_temp[int(train_lenth):]
 
     train_temp_data, train_temp_label = sliding_window2(train_Amplitude_repiratory_signal_temp ,seq_length, prediction_length)
@@ -249,6 +247,9 @@ for epoch in range(num_epochs):
 
         # Forward pass
         train_predict_outputs = model(train_data).to(device)
+        train_predict_outputs = train_predict_outputs.cpu().detach().numpy()
+        train_predict_outputs = sp.signal.savgol_filter(np.squeeze(train_predict_outputs), 25, 2)
+        train_predict_outputs = torch.from_numpy(train_predict_outputs).float().cuda()
 
         loss = criterion(train_predict_outputs, train_labels)
 
@@ -323,8 +324,6 @@ for epoch in range(num_epochs):
     print('test Loss: {:.6f}, test corr: {:.6f} '.format(test_rmse_result_mean, test_corr_result_mean))
 
 
-#Epoch [5/20], train Loss: 0.221884, train corr: 0.971094
-#test Loss: 0.234534, test corr: 0.972114
 
 save_path = "../06_pytorch/model_save/Transformer_1229.pth"
 torch.save(model, save_path)
