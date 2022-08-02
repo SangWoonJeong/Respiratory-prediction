@@ -98,13 +98,10 @@ for filename_single_full in PatientRespiratoryList:
     len_Amplitude_repiratory_signal_temp = np.round(len_Amplitude_repiratory_signal_temp * 0.8)  # get rid of tail information
     Amplitude_repiratory_signal_temp = Amplitude_repiratory_signal_temp[:int(len_Amplitude_repiratory_signal_temp)] # erase tail information
 
-    # Amplitude_repiratory_signal_temp = median_filter(MinMaxScaler(Amplitude_repiratory_signal_temp),9)
 
     train_lenth = len(Amplitude_repiratory_signal_temp) * TrainingDB_Ratio
 
     train_Amplitude_repiratory_signal_temp =Amplitude_repiratory_signal_temp[:int(train_lenth)]
-    train_Amplitude_repiratory_signal_temp = sp.signal.savgol_filter(train_Amplitude_repiratory_signal_temp, 25, 2)
-
     test_Amplitude_repiratory_signal_temp = Amplitude_repiratory_signal_temp[int(train_lenth):]
 
     train_temp_data, train_temp_label = sliding_window2(train_Amplitude_repiratory_signal_temp ,seq_length, prediction_length)
@@ -283,6 +280,9 @@ for epoch in range(num_epochs):
 
         # Forward pass
         train_predict_outputs = model(train_data)
+        train_predict_outputs = train_predict_outputs.cpu().detach().numpy()
+        train_predict_outputs = sp.signal.savgol_filter(np.squeeze(train_predict_outputs), 25, 2)
+        train_predict_outputs = torch.from_numpy(train_predict_outputs).float().cuda()
 
         loss = criterion(train_predict_outputs, train_labels)
 
