@@ -1,14 +1,17 @@
 # Clinical applicability of deep learning-based respiratory signal prediction models for four-dimensional radiation therapy
 
 
-We compared respiration predictions using three deep learning models. <br/> 
-We share the deep learning model and example data used for respiration prediction. <br/> 
-Respiratory prediction using deep learning compensates for the latency time of the radiation therapy device, and it seems that it can be used in clinical practice. <br/> 
+## Introduction
+In radiation therapy, the respiratory gating method is widely used to account for the patient's breathing during treatment. However, this method introduces delays between beam on and off times. These delays can reduce the accuracy of the treatment and potentially harm normal tissues, making delay compensation necessary.
 
-models : LSTM, Bi-LSTM, Transformer <br/> 
-equipment : AZ-733VI(Anzai Medical Co. Ltd.)
+We utilize artificial intelligence methods to predict breathing patterns under various delay conditions. The models used in our research are LSTM, Bi-LSTM, and Transformer, with delay times of 300, 500, and 700 ms
 
 
+
+
+
+## Contact
+-**Email**: sangwoonjeong93@gmail.com
 
 
 
